@@ -15,15 +15,30 @@ const SEQ_ARR = [1,2,3,4];
 let USER_SEQ = "";
 let SEQ_STRING = "";
 let SEQ_LENGTH = 3;
+let ITER = 0;
 
 
-// let pausing = setTimeout(addDelay, 750);
         
 // clearTimeout();
 
 
 function addDelay() {
-    console.log("adding 0.75 sec delay...");
+    
+    setTimeout(function () {    
+                  
+        console.log(SEQ_STRING[ITER])
+        ITER++;
+        ;                     
+        //console.log(SEQ_STRING.length);
+        if (ITER < SEQ_STRING.length) {            
+           addDelay();             
+        }                       
+     }, 3000)
+     
+     //Reset iterator to 0 once it reaches sequence length
+     if(ITER === SEQ_STRING.length) {
+         ITER = 0;
+     }
 }
 //create 1 random sequence of n length:
 function genSequence(length) {
@@ -34,11 +49,18 @@ function genSequence(length) {
     
     for(i=0; i<length; i++) {
         //add 3/4 delay between each addition to the sequence:
+        //set flag and run timeout:
+        
+        //console.log("beforepause");
         
         let randomInt = Math.floor(Math.random() * Math.floor(4));
         SEQ_STRING += SEQ_ARR[randomInt];
+        //console.log("afterpause");
     }
     console.log(SEQ_STRING);
+    addDelay();
+    //reset iterator to 0
+    //ITER = 0;
     return SEQ_STRING;
 }
 
