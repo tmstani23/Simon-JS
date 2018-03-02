@@ -14,45 +14,53 @@
 const SEQ_ARR = [1,2,3,4];
 let USER_SEQ = "";
 let SEQ_STRING = "";
-let SEQ_LENGTH = 3;
+let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
+let RESET_FLAG = true;
 
 const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
 const SOUND_3 = new Audio('snds/simonSound3.mp3');
 const SOUND_4 = new Audio('snds/simonSound4.mp3');
-let SOUND_ARR = [SOUND_1, SOUND_2, SOUND_3, SOUND_4];
+let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1];
 
         
-// clearTimeout();
+
 //document.getElementById("button1").onmousedown = function() {playSound(0)}
 
 function playSeq() {
-    USER_TURN = false;
+    
     setTimeout(function () {    
                   
-        console.log(SEQ_STRING[ITER])
+        console.log(SEQ_STRING[ITER]);
+        playSound(SEQ_STRING[ITER] - 1);
         ITER++;
         ;                     
         //console.log(SEQ_STRING.length);
         if (ITER < SEQ_STRING.length) {            
            playSeq();             
         }
+        if(ITER === SEQ_STRING.length) {
+            ITER = 0;
+            USER_TURN = true;
+        }
         //USER_TURN = true;                       
-     }, 3000)
+     }, 1000)
      
      //Reset iterator to 0 once it reaches sequence length
-     if(ITER === SEQ_STRING.length) {
-         ITER = 0;
-     }
+     
+     //console.log(USER_TURN + "userturn");
     
 }
 //create 1 random sequence of n length:
 function genSequence(length) {
     //generate random number between 0 and 3:
     
-    
+    //If the sequence is longer than 20 end game:
+    if(SEQ_LENGTH > 20) {
+        displayMsg("error-p", "sequence longer than 20");
+    }
     //console.log(randomInt);
     
     for(i=0; i<length; i++) {
@@ -66,7 +74,12 @@ function genSequence(length) {
         //console.log("afterpause");
     }
     console.log(SEQ_STRING);
+    //Display sequence count to the user:
+    let dispCount = SEQ_STRING.length;
+    displayMsg("seq-display", dispCount);
+    USER_TURN = false;
     playSeq();
+    
     //reset iterator to 0
     //ITER = 0;
     return SEQ_STRING;
@@ -86,7 +99,7 @@ function playSound(val) {
 function userMove(num) {
     
     if(!USER_TURN) {
-        displayMsg("Wait your turn");
+        displayMsg("error-p","Wait your turn");
         return;
     }
     let sndIndex = num-1;
@@ -99,7 +112,7 @@ function userMove(num) {
     //console.log(USER_SEQ[currentIndex]);
     //check num against last number of gen sequence string:
         //get index position of number in user sequence
-        console.log(currentIndex);
+        //console.log(currentIndex);
         //check same index position of seqstring
         let genSeqVal = parseInt(SEQ_STRING[currentIndex]);    
         console.log(genSeqVal);
@@ -111,7 +124,10 @@ function userMove(num) {
         if(num != genSeqVal) {
             console.log("incorrect number" + num + genSeqVal);
             //notify user:
-            displayMsg("Incorrect Sequence");
+            displayMsg("error-p","Incorrect Sequence");
+            //reset user sequence:
+            USER_SEQ = "";
+            USER_TURN = false;
             //play error sound
             //play current sequence:
             playSeq();
@@ -129,20 +145,67 @@ function verifySeq() {
     
         
         if(USER_SEQ === SEQ_STRING) {
+            if(USER_SEQ.length === 20) {
+                displayMsg("error-p", "You Win!");
+                return;
+            }
+            SEQ_LENGTH ++;
             console.log("string verified");
+            USER_SEQ = "";
+            SEQ_STRING = "";
+            USER_TURN = false;
+            genSequence(SEQ_LENGTH);
         }
         else {
             console.log("incorrect string");
+            //reset user sequence:
+            USER_SEQ = "";
+            USER_TURN = false;
+            //play error sound
+            //play current sequence:
+            playSeq();
         }
         
 }
 
-function displayMsg(msg) {
-    document.getElementById("errorP").innerHTML = msg;
+function resetGame() {
+    //reset global variables:
+    USER_SEQ = "";
+    SEQ_STRING = "";
+    SEQ_LENGTH = 1;
+    ITER = 0;
+    USER_TURN = false;
+    RESET_FLAG = true;
+    //Reset game display messages:
+    displayMsg("error-p", "");
+    displayMsg("seq-display", SEQ_LENGTH);
+
+    //Play warning sound:
+    
+    //Do a 1 second hard pause:
+
+    //Start new sequence:
+    startGame();
+    //set reset flag back to false:
+    RESET_FLAG = false;
+}
+
+function startGame() {
+    if(RESET_FLAG === true) {
+        genSequence(SEQ_LENGTH);
+    }
+    else {
+        console.log("game in progress");
+        return;
+    }
+}
+
+function displayMsg(where, msg) {
+    document.getElementById(where).innerHTML = msg;
 }
 
 
-genSequence(SEQ_LENGTH);
+
 // if(SEQ_LENGTH < 20) {
 //     console.log(genSequence(SEQ_LENGTH));
 //     SEQ_LENGTH ++;
