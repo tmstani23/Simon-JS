@@ -29,24 +29,32 @@ let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1];
 
 //document.getElementById("button1").onmousedown = function() {playSound(0)}
 
-function playSeq() {
+function playSeq(duration, initialP) {
     
     setTimeout(function () {    
-                  
-        console.log(SEQ_STRING[ITER]);
-        playSound(SEQ_STRING[ITER] - 1);
-        ITER++;
-        ;                     
-        //console.log(SEQ_STRING.length);
-        if (ITER < SEQ_STRING.length) {            
-           playSeq();             
+        //If initial p flag is set add an initial pause before continuing:  
+        if(initialP === true) {
+            initialP = false;
+            console.log("initial pause");
+            //playSeq(3000);
         }
-        if(ITER === SEQ_STRING.length) {
-            ITER = 0;
-            USER_TURN = true;
-        }
+        if(!initialP) {
+            console.log(SEQ_STRING[ITER]);
+            playSound(SEQ_STRING[ITER] - 1);
+            ITER++;
+            ;                     
+            //console.log(SEQ_STRING.length);
+            if (ITER < SEQ_STRING.length) {            
+            playSeq(1000);             
+            }
+            if(ITER === SEQ_STRING.length) {
+                ITER = 0;
+                USER_TURN = true;
+            }
+        }        
+        
         //USER_TURN = true;                       
-     }, 1000)
+     }, duration)
      
      //Reset iterator to 0 once it reaches sequence length
      
@@ -78,7 +86,7 @@ function genSequence(length) {
     let dispCount = SEQ_STRING.length;
     displayMsg("seq-display", dispCount);
     USER_TURN = false;
-    playSeq();
+    playSeq(2000, true);
     
     //reset iterator to 0
     //ITER = 0;
@@ -129,8 +137,8 @@ function userMove(num) {
             USER_SEQ = "";
             USER_TURN = false;
             //play error sound
-            //play current sequence:
-            playSeq();
+            //play current sequence with 3 second pause at the start:
+            playSeq(3000, true);
 
         }
         if(USER_SEQ.length === SEQ_STRING.length) {
@@ -163,7 +171,7 @@ function verifySeq() {
             USER_TURN = false;
             //play error sound
             //play current sequence:
-            playSeq();
+            playSeq(2000, true);
         }
         
 }
