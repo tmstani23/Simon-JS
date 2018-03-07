@@ -29,58 +29,70 @@ let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1];
         
 
 //document.getElementById("button1").onmousedown = function() {playSound(0)}
-
-function playSeq(duration, initialP) {
+function hardPause(duration, change){
+    setTimeout(function() {
+        //console.log("hard pause");
+        //console.log("changing background to purple");
+        if(change === true){
+            changeBGround(true);
+        }
+    }, duration);
+}
+function playSeq(duration) {
     
     setTimeout(function () {    
-        //If initial p flag is set add an initial pause before continuing:  
-        if(initialP === true) {
-            initialP = false;
-            console.log("initial pause");
-            //playSeq(3000);
-        }
-        if(!initialP) {
-            //play sound for specific sequence value:
-            console.log(SEQ_STRING[ITER]);
-            playSound(SEQ_STRING[ITER] - 1);
-            //change background color:
-            changeBGround();
-            //Increase counter:
-            ITER++;
-            ;                     
-            //console.log(SEQ_STRING.length);
-            if (ITER < SEQ_STRING.length) {            
+        
+        
+        //play sound for specific sequence value:
+        console.log(SEQ_STRING[ITER]);
+        playSound(SEQ_STRING[ITER] - 1);
+        //change background color:
+        changeBGround(false, SEQ_STRING[ITER]); 
+        //Increase counter:
+        ITER++;
+                            
+        //console.log(SEQ_STRING.length);
+        if (ITER < SEQ_STRING.length) {            
             playSeq(1000);             
-            }
-            if(ITER === SEQ_STRING.length) {
-                //console.log('iter at string length');
-                changeBGround(true);
-                ITER = 0;
-                USER_TURN = true;
-            }
-        }                              
-     }, duration)       
+        }
+        if(ITER === SEQ_STRING.length) {
+            //console.log('iter at string length');
+            hardPause(1000, true);
+            ITER = 0;
+            USER_TURN = true;
+        }
+                              
+    }, duration);       
 }
 //Change background color:
-function changeBGround(clear) {
+function changeBGround(clear, where) {
     //set button id variable to current sequence
-    let dispIdCurr = 'button' + SEQ_STRING[ITER];
-    let dispIdPrev = 'button' + SEQ_STRING[ITER - 1];
+    let dispIdCurr = 'button' + where
+    console.log(dispIdCurr + "background");
+    //console.log(dispIdPrev);
+    let dispIdPrev = 'button' + (where - 1);
     //DISP_COLOR.push(dispId);
     
+    
+    //Cycle through all buttons other than current and change background to purple:
+    
+    
+    //Set active sequence color:
     if(document.getElementById(dispIdCurr) != null) {
-        //Set active sequence color:
-        document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";
+        //Change back previous sequence to active color:
+        document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";;
     }
-    //If previous id 
-    if(document.getElementById(dispIdPrev) != null) {
-        //Change back previous sequence to passive color
-        document.getElementById(dispIdPrev).style.backgroundColor = "#660066";
-    }
+    
+    
+    
+
     //if there is only one item in sequence change bg back to passive color:
     if(clear === true) {
-        document.getElementById(dispIdPrev).style.backgroundColor = "#660066";
-        //document.getElementById(dispIdCurr).style.backgroundColor = "#660066";
+        let dispId = 'button' + SEQ_STRING[SEQ_STRING.length - 1];
+        console.log(dispIdCurr);
+        document.getElementById(dispId).style.backgroundColor = "#660066";
+        clear = false;
+        
     }
     
     //If the previous id isn't a button id:
@@ -110,7 +122,7 @@ function genSequence(length) {
     let dispCount = SEQ_STRING.length;
     displayMsg("seq-display", dispCount);
     USER_TURN = false;
-    playSeq(2000, true);
+    playSeq(1500);
     
     //reset iterator to 0
     //ITER = 0;
@@ -119,10 +131,10 @@ function genSequence(length) {
 function playSound(val) {
     if(window.chrome) {
         SOUND_ARR[val].load();
-        SOUND_ARR[val].play();
+        SOUND_ARR[val].play(); 
     }
     else {
-        SOUND_1.play();
+        SOUND_1.play(); 
     }
     //SOUND_1.pause();
 }
@@ -162,7 +174,7 @@ function userMove(num) {
             USER_TURN = false;
             //play error sound
             //play current sequence with 3 second pause at the start:
-            playSeq(3000, true);
+            playSeq(1500);
 
         }
         if(USER_SEQ.length === SEQ_STRING.length) {
@@ -195,7 +207,7 @@ function verifySeq() {
             USER_TURN = false;
             //play error sound
             //play current sequence:
-            playSeq(2000, true);
+            playSeq(1500);
         }
         
 }
