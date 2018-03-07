@@ -18,6 +18,7 @@ let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
+let DISP_COLOR = [];
 
 const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
@@ -39,8 +40,12 @@ function playSeq(duration, initialP) {
             //playSeq(3000);
         }
         if(!initialP) {
+            //play sound for specific sequence value:
             console.log(SEQ_STRING[ITER]);
             playSound(SEQ_STRING[ITER] - 1);
+            //change background color:
+            changeBGround();
+            //Increase counter:
             ITER++;
             ;                     
             //console.log(SEQ_STRING.length);
@@ -48,20 +53,39 @@ function playSeq(duration, initialP) {
             playSeq(1000);             
             }
             if(ITER === SEQ_STRING.length) {
+                //console.log('iter at string length');
+                changeBGround(true);
                 ITER = 0;
                 USER_TURN = true;
             }
-        }        
-        
-        //USER_TURN = true;                       
-     }, duration)
-     
-     //Reset iterator to 0 once it reaches sequence length
-     
-     //console.log(USER_TURN + "userturn");
-    
+        }                              
+     }, duration)       
 }
-//create 1 random sequence of n length:
+//Change background color:
+function changeBGround(clear) {
+    //set button id variable to current sequence
+    let dispIdCurr = 'button' + SEQ_STRING[ITER];
+    let dispIdPrev = 'button' + SEQ_STRING[ITER - 1];
+    //DISP_COLOR.push(dispId);
+    
+    if(document.getElementById(dispIdCurr) != null) {
+        //Set active sequence color:
+        document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";
+    }
+    //If previous id 
+    if(document.getElementById(dispIdPrev) != null) {
+        //Change back previous sequence to passive color
+        document.getElementById(dispIdPrev).style.backgroundColor = "#660066";
+    }
+    //if there is only one item in sequence change bg back to passive color:
+    if(clear === true) {
+        document.getElementById(dispIdPrev).style.backgroundColor = "#660066";
+        //document.getElementById(dispIdCurr).style.backgroundColor = "#660066";
+    }
+    
+    //If the previous id isn't a button id:
+}
+//Generate 1 random sequence of n length:
 function genSequence(length) {
     //generate random number between 0 and 3:
     
@@ -212,9 +236,3 @@ function displayMsg(where, msg) {
     document.getElementById(where).innerHTML = msg;
 }
 
-
-
-// if(SEQ_LENGTH < 20) {
-//     console.log(genSequence(SEQ_LENGTH));
-//     SEQ_LENGTH ++;
-// };

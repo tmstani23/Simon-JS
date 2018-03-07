@@ -8,3 +8,6 @@ html, body {
     margin-top: 0;
     text-align: left;
 }
+.btn, btn-primary {
+    background-color: #660066;
+}
