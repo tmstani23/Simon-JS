@@ -2,11 +2,21 @@ html, body {
     margin: 0 auto;
     font-family: 'Open Sans Condensed', sans-serif; 
 }
-
+.container {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 50px, 50px, 50px, 50px;
+}
 #seq-display {
     margin-bottom: 0;
     margin-top: 0;
     text-align: left;
+}
+#title-h {
+    grid-column: 1/3;
+    background-color: cornflowerblue;
+    text-align: center;
 }
 .btn, btn-primary {
     background-color: #660066;

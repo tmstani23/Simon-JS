@@ -18,24 +18,31 @@ let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
+let HARD_FLAG = true;
+let START_FLAG = true;
 let DISP_COLOR = [];
 
 const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
 const SOUND_3 = new Audio('snds/simonSound3.mp3');
 const SOUND_4 = new Audio('snds/simonSound4.mp3');
-let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1];
+const ERROR_SND = new Audio('snds/errorsnd.mp3');
+let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1, ERROR_SND];
 
-        
 
-//document.getElementById("button1").onmousedown = function() {playSound(0)}
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
+
 function hardPause(duration, change){
+    
     setTimeout(function() {
         //console.log("hard pause");
         //console.log("changing background to purple");
         if(change === true){
             changeBGround(true);
         }
+        
     }, duration);
 }
 function playSeq(duration) {
@@ -44,7 +51,7 @@ function playSeq(duration) {
         
         
         //play sound for specific sequence value:
-        console.log(SEQ_STRING[ITER]);
+        //console.log(SEQ_STRING[ITER]);
         playSound(SEQ_STRING[ITER] - 1);
         //change background color:
         changeBGround(false, SEQ_STRING[ITER]); 
@@ -68,34 +75,28 @@ function playSeq(duration) {
 function changeBGround(clear, where) {
     //set button id variable to current sequence
     let dispIdCurr = 'button' + where
-    console.log(dispIdCurr + "background");
+    //console.log(dispIdCurr + "background");
     //console.log(dispIdPrev);
-    let dispIdPrev = 'button' + (where - 1);
-    //DISP_COLOR.push(dispId);
-    
-    
-    //Cycle through all buttons other than current and change background to purple:
-    
-    
-    //Set active sequence color:
-    if(document.getElementById(dispIdCurr) != null) {
-        //Change back previous sequence to active color:
-        document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";;
+    //Cycle through all buttons other than current and change background to purple
+        //Unless it is
+    for(i=1;i<=4; i++) {
+        let changeButton = 'button' + i;
+        //console.log(changeButton, dispIdCurr, where);
+        if(changeButton == dispIdCurr) {
+            document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";
+        }
+        else {
+            document.getElementById(changeButton).style.backgroundColor = "#660066";
+        }
     }
-    
-    
-    
-
+   
     //if there is only one item in sequence change bg back to passive color:
     if(clear === true) {
         let dispId = 'button' + SEQ_STRING[SEQ_STRING.length - 1];
-        console.log(dispIdCurr);
         document.getElementById(dispId).style.backgroundColor = "#660066";
         clear = false;
         
     }
-    
-    //If the previous id isn't a button id:
 }
 //Generate 1 random sequence of n length:
 function genSequence(length) {
@@ -110,9 +111,6 @@ function genSequence(length) {
     for(i=0; i<length; i++) {
         //add 3/4 delay between each addition to the sequence:
         //set flag and run timeout:
-        
-        //console.log("beforepause");
-        
         let randomInt = Math.floor(Math.random() * Math.floor(4));
         SEQ_STRING += SEQ_ARR[randomInt];
         //console.log("afterpause");
@@ -128,13 +126,13 @@ function genSequence(length) {
     //ITER = 0;
     return SEQ_STRING;
 }
-function playSound(val) {
+function playSound(index) {
     if(window.chrome) {
-        SOUND_ARR[val].load();
-        SOUND_ARR[val].play(); 
+        SOUND_ARR[index].load();
+        SOUND_ARR[index].play(); 
     }
     else {
-        SOUND_1.play(); 
+        index.play(); 
     }
     //SOUND_1.pause();
 }
@@ -150,6 +148,8 @@ function userMove(num) {
     //currentIndex += 1;
     USER_SEQ += num;
     playSound(sndIndex);
+    changeBGround(false, num);
+    hardPause(1000, false);
     let currentIndex = USER_SEQ.length - 1;
     
     //Synchronize user moves with current sequence index positions:
@@ -167,14 +167,27 @@ function userMove(num) {
     //If user presses a wrong button they are notified and the same sequence plays again
         if(num != genSeqVal) {
             console.log("incorrect number" + num + genSeqVal);
+            if(HARD_FLAG === true) {
+                displayMsg("error-p", "Incorrect Sequence");
+                playSound(4);
+                // async function demo(){
+                //     await sleep(4000);
+                // }
+                // demo();
+                hardPause(5000, true)
+                resetGame();
+                return;
+            }
             //notify user:
             displayMsg("error-p","Incorrect Sequence");
             //reset user sequence:
             USER_SEQ = "";
             USER_TURN = false;
-            //play error sound
+            //play error sound:
+            //hardPause(5000, false);
+            playSound(4)
             //play current sequence with 3 second pause at the start:
-            playSeq(1500);
+            playSeq(3000);
 
         }
         if(USER_SEQ.length === SEQ_STRING.length) {
@@ -202,6 +215,11 @@ function verifySeq() {
         }
         else {
             console.log("incorrect string");
+            if(HARD_FLAG === true) {
+                displayMsg("error-p", "Incorrect Sequence");
+                resetGame();
+                return;
+            }
             //reset user sequence:
             USER_SEQ = "";
             USER_TURN = false;
@@ -221,8 +239,8 @@ function resetGame() {
     USER_TURN = false;
     RESET_FLAG = true;
     //Reset game display messages:
-    displayMsg("error-p", "");
-    displayMsg("seq-display", SEQ_LENGTH);
+    //displayMsg("error-p", "");
+    //displayMsg("seq-display", SEQ_LENGTH);
 
     //Play warning sound:
     
@@ -236,6 +254,7 @@ function resetGame() {
 
 function startGame() {
     if(RESET_FLAG === true) {
+        //console.log(SEQ_LENGTH);
         genSequence(SEQ_LENGTH);
     }
     else {
