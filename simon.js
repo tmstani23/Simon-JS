@@ -18,7 +18,7 @@ let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
-let HARD_FLAG = true;
+let HARD_FLAG = false;
 let START_FLAG = true;
 let DISP_COLOR = [];
 
@@ -30,9 +30,19 @@ const ERROR_SND = new Audio('snds/errorsnd.mp3');
 let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1, ERROR_SND];
 
 
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
+var checkbox = document.querySelector("input[name=checkbox]");
+
+checkbox.addEventListener( 'change', function() {
+    if(this.checked) {
+        // Checkbox is checked..
+        console.log("is checked");
+        HARD_FLAG = true;
+    } else {
+        // Checkbox is not checked..
+        console.log("isn't checked");
+        HARD_FLAG = false;
+    }
+});
 
 function hardPause(duration, change){
     
@@ -118,7 +128,7 @@ function genSequence(length) {
     console.log(SEQ_STRING);
     //Display sequence count to the user:
     let dispCount = SEQ_STRING.length;
-    displayMsg("seq-display", dispCount);
+    displayMsg("seq-display", `Sequence Length: ` + dispCount);
     USER_TURN = false;
     playSeq(1500);
     
@@ -129,10 +139,11 @@ function genSequence(length) {
 function playSound(index) {
     if(window.chrome) {
         SOUND_ARR[index].load();
+        SOUND_ARR[index].pause();
         SOUND_ARR[index].play(); 
     }
     else {
-        index.play(); 
+        SOUND_ARR[index].play(); 
     }
     //SOUND_1.pause();
 }
@@ -167,6 +178,7 @@ function userMove(num) {
     //If user presses a wrong button they are notified and the same sequence plays again
         if(num != genSeqVal) {
             console.log("incorrect number" + num + genSeqVal);
+            console.log("hard flag status:" + HARD_FLAG);
             if(HARD_FLAG === true) {
                 displayMsg("error-p", "Incorrect Sequence");
                 playSound(4);
