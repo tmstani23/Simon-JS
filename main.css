@@ -1,6 +1,7 @@
 html, body {
     margin: 0 auto;
-    font-family: 'Open Sans Condensed', sans-serif; 
+    font-family: 'Open Sans Condensed', sans-serif;
+    color: white; 
 }
 .container {
     display: grid;
@@ -16,11 +17,11 @@ html, body {
 #error-p {
     grid-column: 1/3;
     text-align: center;
-    background-color: cornflowerblue;
+    background-color: FF1100;
 }
 #title-h {
     grid-column: 1/3;
-    background-color: cornflowerblue;
+    background-color: 96FFC1;
     text-align: center;
 }
 input[type="checkbox"] {
@@ -30,8 +31,9 @@ input[type="checkbox"] {
 }
 .label-text {
   display: inline-block;
-  width: 35px; 
+  width: 35px;
+  color: black; 
 }
 .btn, btn-primary {
-    background-color: #660066;
+    background-color: B2524C;
 }

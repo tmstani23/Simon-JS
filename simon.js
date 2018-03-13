@@ -26,9 +26,13 @@ const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
 const SOUND_3 = new Audio('snds/simonSound3.mp3');
 const SOUND_4 = new Audio('snds/simonSound4.mp3');
-const ERROR_SND = new Audio('snds/errorsnd.mp3');
+const ERROR_SND = new Audio('snds/doh.wav');
 let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1, ERROR_SND];
-
+let dRed = "B2524C";
+let bRed = "FF1100";
+let mGreen = "98D9B2";
+let lGreen = "96FFC1";
+let bGreen = "00FF69";
 
 var checkbox = document.querySelector("input[name=checkbox]");
 
@@ -70,6 +74,9 @@ function playSeq(duration) {
                             
         //console.log(SEQ_STRING.length);
         if (ITER < SEQ_STRING.length) {            
+            //Reset the error message to blank:
+            displayMsg("error-p", "");
+            //Play the sequence again:
             playSeq(1000);             
         }
         if(ITER === SEQ_STRING.length) {
@@ -93,17 +100,17 @@ function changeBGround(clear, where) {
         let changeButton = 'button' + i;
         //console.log(changeButton, dispIdCurr, where);
         if(changeButton == dispIdCurr) {
-            document.getElementById(dispIdCurr).style.backgroundColor = "#6d1818";
+            document.getElementById(dispIdCurr).style.backgroundColor = bGreen;
         }
         else {
-            document.getElementById(changeButton).style.backgroundColor = "#660066";
+            document.getElementById(changeButton).style.backgroundColor = dRed;
         }
     }
    
     //if there is only one item in sequence change bg back to passive color:
     if(clear === true) {
         let dispId = 'button' + SEQ_STRING[SEQ_STRING.length - 1];
-        document.getElementById(dispId).style.backgroundColor = "#660066";
+        document.getElementById(dispId).style.backgroundColor = dRed;
         clear = false;
         
     }
@@ -115,6 +122,7 @@ function genSequence(length) {
     //If the sequence is longer than 20 end game:
     if(SEQ_LENGTH > 20) {
         displayMsg("error-p", "sequence longer than 20");
+        return;
     }
     //console.log(randomInt);
     
@@ -186,7 +194,7 @@ function userMove(num) {
                 //     await sleep(4000);
                 // }
                 // demo();
-                hardPause(5000, true)
+                //hardPause(5000, true)
                 resetGame();
                 return;
             }
