@@ -147,6 +147,10 @@ function genSequence(length) {
 function playSound(index) {
     if(window.chrome) {
         SOUND_ARR[index].load();
+        if(SOUND_ARR[index] === ERROR_SND) {
+            SOUND_ARR[index].volume = 0.25;
+            //console.log("reduce volume");
+        }
         SOUND_ARR[index].pause();
         SOUND_ARR[index].play(); 
     }

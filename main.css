@@ -3,21 +3,42 @@ html, body {
     font-family: 'Open Sans Condensed', sans-serif;
     color: white; 
 }
-.container {
+.grid-container {
     display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 50px, 50px, 50px, 50px, 50px;
     width:300px;
+    margin: 0 auto;
+    grid-gap: 5px;
+    grid-template-columns: 50px, 50px;
+    grid-template-rows: 50px, 50px, 50px;
+}
+.toggles {
+    display: grid;
+    justify-content: center;
+    margin: 0 auto;
+    grid-gap: 5px;
+    grid-template-columns: 50px, 50px;
+    grid-template-rows: 50px, 50px;
+    width: 300px;
+    
 }
 #seq-display {
-    
+    color: black;
     text-align: center;
+    grid-row: 2 / span 1;
 }
 #error-p {
-    grid-column: 1/3;
+    width: 300px;
+    color: FF1100;
+    margin: 0 auto;
     text-align: center;
-    background-color: FF1100;
+}
+#reset-b {
+    grid-column: 1/2;
+    height: 25px;
+}
+#start-b {
+    grid-column: 2/3;
+    height: 25px;
 }
 #title-h {
     grid-column: 1/3;
@@ -25,6 +46,7 @@ html, body {
     text-align: center;
 }
 input[type="checkbox"] {
+    grid-row: 2 / span 1;
     display: inline-block;
     width: 15px;
     vertical-align: top;
@@ -36,4 +58,5 @@ input[type="checkbox"] {
 }
 .btn, btn-primary {
     background-color: B2524C;
+    height: 50px;
 }

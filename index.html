@@ -11,24 +11,29 @@
         
     </head>
     <body>
-        <div class="container">
+        <div class="grid-container">
             <h1 id="title-h">Simon-JS</h1>
             <button id="button1" class="btn btn-primary" onclick="userMove(1)">position1</button>
             <button id="button2" class="btn btn-primary" onclick="userMove(2)">position2</button>
             <button id="button3" class="btn btn-primary" onclick="userMove(3)">position3</button>
             <button id="button4" class="btn btn-primary" onclick="userMove(4)">position4</button>
-            <button id="startB" class="btn btn-primary" onclick="startGame()">Start Game</button>
-            <button id="resetB" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
-            <label>
-                <input type="checkbox" name="checkbox"><span class="label-text">Hardcore Mode</span> 
-            </label>
-            <span id="seq-display">Sequence Length: 0
-            </span>
+        </div>
+        <div class="toggles">
+            <div>
+                <button id="start-b" class="btn btn-primary" onclick="startGame()">Start Game</button>
+                <button id="reset-b" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" name="checkbox"><span class="label-text">Hardcore Mode</span> 
+                </label>
+                <p id="seq-display">Sequence Length: 0
+                </p>
+            </div>
+            
         </div>
         <div>
-            <p id="error-p">
-                error message here:
-            </p>
+            <p id="error-p"></p>
         </div>
         <script language="javascript" type="text/javascript" src="simon.js"></script>
         <link rel="stylesheet" type="text/css" href="main.css"> 
