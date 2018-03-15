@@ -20,7 +20,8 @@ let USER_TURN = false;
 let RESET_FLAG = true;
 let HARD_FLAG = false;
 let START_FLAG = true;
-let DISP_COLOR = [];
+
+
 
 const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
@@ -127,10 +128,11 @@ function genSequence(length) {
     //console.log(randomInt);
     
     for(i=0; i<length; i++) {
-        //add 3/4 delay between each addition to the sequence:
-        //set flag and run timeout:
+       
+        
         let randomInt = Math.floor(Math.random() * Math.floor(4));
         SEQ_STRING += SEQ_ARR[randomInt];
+       
         //console.log("afterpause");
     }
     console.log(SEQ_STRING);
@@ -164,7 +166,7 @@ function playSound(index) {
 function userMove(num) {
     
     if(!USER_TURN) {
-        displayMsg("error-p","Wait your turn");
+        displayMsg("error-p","Wait your turn.");
         return;
     }
     let sndIndex = num-1;
@@ -192,7 +194,7 @@ function userMove(num) {
             console.log("incorrect number" + num + genSeqVal);
             console.log("hard flag status:" + HARD_FLAG);
             if(HARD_FLAG === true) {
-                displayMsg("error-p", "Incorrect Sequence");
+                displayMsg("error-p", "Incorrect Sequence!");
                 playSound(4);
                 // async function demo(){
                 //     await sleep(4000);
@@ -223,11 +225,14 @@ function userMove(num) {
     //Same sequence is repeated back with an additional step
 //create verify sequence function:
 function verifySeq() {
-    
+    //Edit this function to fix random sequence generation:
         
         if(USER_SEQ === SEQ_STRING) {
             if(USER_SEQ.length === 20) {
-                displayMsg("error-p", "You Win!");
+                displayMsg("error-p", "Congratulations You Win!");
+                //Turn off use turn and reset flag
+                USER_TURN = false;
+                RESET_FLAG = false;
                 return;
             }
             SEQ_LENGTH ++;
@@ -278,11 +283,14 @@ function resetGame() {
 
 function startGame() {
     if(RESET_FLAG === true) {
-        //console.log(SEQ_LENGTH);
+        
+        RESET_FLAG = false;
         genSequence(SEQ_LENGTH);
+        return;
     }
     else {
         console.log("game in progress");
+        displayMsg("error-p","Game in Progress. Reset to start over.");
         return;
     }
 }
