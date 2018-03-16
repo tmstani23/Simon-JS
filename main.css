@@ -14,10 +14,11 @@ html, body {
 .toggles {
     display: grid;
     justify-content: center;
+    
     margin: 0 auto;
     margin-top: 10px;
     grid-gap: 5px;
-    grid-template-columns: 50px, 50px;
+    grid-template-columns: auto, auto;
     grid-template-rows: 50px, 50px;
     width: 300px;
     
@@ -32,36 +33,32 @@ html, body {
     color: FF1100;
     margin: 0 auto;
     text-align: center;
+    font-size: 28px;
 }
 #reset-b {
     grid-column: 1/2;
     height: 25px;
     background-color: 96FFC1;
     color: black;
+    border-radius: 25px;
 }
 #start-b {
     grid-column: 2/3;
     height: 25px;
     background-color: 96FFC1;
     color: black;
+    border-radius: 25px;
 }
 #title-h {
     grid-column: 1/3;
-    border-radius: 5px;
+    border-radius: 40px;
     background-color: 98D9B2;
     text-align: center;
     color: FF1100;
 }
-input[type="checkbox"] {
-    grid-row: 2 / span 1;
-    display: inline-block;
-    width: 15px;
-    vertical-align: top;
-}
+
 .label-text {
-  display: inline-block;
-  width: 35px;
-  color: FF1100; 
+    color: FF1100; 
 }
 .btn, btn-primary {
     color: white;
