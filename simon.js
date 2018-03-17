@@ -7,6 +7,7 @@ let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
+let IN_PROGRESS = false;
 let HARD_FLAG = false;
 let RANDOM_MODE = false;
 //Initialize Sounds
@@ -127,7 +128,7 @@ function genSequence(length) {
     displayMsg("seq-display", `Sequence Length: ` + dispCount);
     //end user turn and play the generated sequence:
     USER_TURN = false;
-    playSeq(1500);
+    playSeq(2000);
     return;
 }
 //Function that plays button and error sounds:
@@ -170,24 +171,25 @@ function userMove(num) {
     console.log(genSeqVal);
     //If user presses a wrong button:
     if(num != genSeqVal) {
-        //If hardcore mode is selected:
-        if(HARD_FLAG === true) {
-            //Display incorrect sequence message to the screen:
-            displayMsg("error-p", "Incorrect Sequence!");
-            //Play error message sound:
-            playSound(4);
-            //Reset the game:
-            resetGame();
-            return;
-        }
-        //Else notify the user, reset the user sequence to blank, play error sound
-        displayMsg("error-p","Incorrect Sequence");
-        //reset user sequence:
-        USER_SEQ = "";
-        USER_TURN = false;
-        playSound(4)
-        //play current sequence with 3 second pause at the start:
-        playSeq(3000);
+        verifySeq();
+        // //If hardcore mode is selected:
+        // if(HARD_FLAG === true) {
+        //     //Display incorrect sequence message to the screen:
+        //     displayMsg("error-p", "Incorrect Sequence!");
+        //     //Play error message sound:
+        //     playSound(4);
+        //     //Reset the game:
+        //     resetGame();
+        //     return;
+        // }
+        // //Else notify the user, reset the user sequence to blank, play error sound
+        // displayMsg("error-p","Incorrect Sequence");
+        // //reset user sequence:
+        // USER_SEQ = "";
+        // USER_TURN = false;
+        // playSound(4)
+        // //play current sequence with 3 second pause at the start:
+        // playSeq(3000);
     }
     //If it's the last number/button in the sequence:
     if(USER_SEQ.length === SEQ_STRING.length) {
@@ -195,44 +197,56 @@ function userMove(num) {
         verifySeq();
     }
 }
-
-//After user inputs correct sequence
-    //Same sequence is repeated back with an additional step
-//create verify sequence function:
+//This function verifies whether the user wins or loses the game
+    //and determines the next steps
 function verifySeq() {
-    //Edit this function to fix random sequence generation:
-        
+        //If the user sequence matches the full generated sequence:
         if(USER_SEQ === SEQ_STRING) {
+            //if the user sequence length is 20:
             if(USER_SEQ.length === 20) {
+                //Display win message to screen
                 displayMsg("error-p", "Congratulations You Win!");
-                //Turn off use turn and reset flag
+                //Turn off user turn and reset flag, end function:
                 USER_TURN = false;
+                //Turn off reset flag and end function:
                 RESET_FLAG = false;
                 return;
             }
+            
+            //Otherwise:
+            //Increase the sequence length by 1:
             SEQ_LENGTH ++;
-            console.log("string verified");
+            //Reset the user sequence to blank:
             USER_SEQ = "";
-            //SEQ_STRING = "";
+            
+            //Turn off user turn:
             USER_TURN = false;
+            //Generate a new sequence with the new length:
             genSequence(SEQ_LENGTH);
         }
+        //If any other condition:
         else {
-            console.log("incorrect string");
+            //If hardcore mode is checked
             if(HARD_FLAG === true) {
+                //Display message to screen, reset game, and end function:
                 displayMsg("error-p", "Incorrect Sequence");
+                playSound(4);
                 resetGame();
                 return;
             }
-            //reset user sequence:
+            //Otherwise:
+            //Reset user sequence and end turn:
             USER_SEQ = "";
             USER_TURN = false;
+            //Display error message to screen:
+            displayMsg("error-p","Incorrect Sequence");
             //play error sound
+            playSound(4);
             //play current sequence:
-            playSeq(1500);
+            playSeq(2000);
         }
 }
-
+//Function that resets the game:
 function resetGame() {
     //reset global variables:
     USER_SEQ = "";
@@ -241,35 +255,34 @@ function resetGame() {
     ITER = 0;
     USER_TURN = false;
     RESET_FLAG = true;
-    //Reset game display messages:
-    //displayMsg("error-p", "");
-    //displayMsg("seq-display", SEQ_LENGTH);
-
-    //Play warning sound:
+    //Start a new game:
     
-    //Do a 1 second hard pause:
-
-    //Start new sequence:
     startGame();
+    
+    
     //set reset flag back to false:
-    RESET_FLAG = false;
+    //RESET_FLAG = false;
 }
-
+//Function that starts the game:
 function startGame() {
+    
+    //If the game was just reset:
     if(RESET_FLAG === true) {
-        
+        //Set reset flag back to false:
         RESET_FLAG = false;
+        //Generate a new sequence and end the function:
         genSequence(SEQ_LENGTH);
         return;
     }
     else {
-        console.log("game in progress");
+        //Display a message that the game is in progress and end the function:
         displayMsg("error-p","Game in Progress. Reset to start over.");
         return;
     }
 }
-
+//Function that displays a message to the screen:
 function displayMsg(where, msg) {
+    //Get display element based on function input argument and display input message:
     document.getElementById(where).innerHTML = msg;
 }
 
