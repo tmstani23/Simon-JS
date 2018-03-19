@@ -7,7 +7,6 @@ let SEQ_LENGTH = 1;
 let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
-let IN_PROGRESS = false;
 let HARD_FLAG = false;
 let RANDOM_MODE = false;
 //Initialize Sounds
@@ -63,6 +62,7 @@ function playSeq(duration) {
         changeBGround(false, SEQ_STRING[ITER]); 
         //Increase counter:
         ITER++;
+        
         //If current iteration is less than the sequence length:
         if (ITER < SEQ_STRING.length) {            
             //Reset the error message to blank:
@@ -78,6 +78,7 @@ function playSeq(duration) {
             ITER = 0;
             USER_TURN = true;
         }
+        
     }, duration);       
 }
 //Change background color function:
@@ -172,24 +173,6 @@ function userMove(num) {
     //If user presses a wrong button:
     if(num != genSeqVal) {
         verifySeq();
-        // //If hardcore mode is selected:
-        // if(HARD_FLAG === true) {
-        //     //Display incorrect sequence message to the screen:
-        //     displayMsg("error-p", "Incorrect Sequence!");
-        //     //Play error message sound:
-        //     playSound(4);
-        //     //Reset the game:
-        //     resetGame();
-        //     return;
-        // }
-        // //Else notify the user, reset the user sequence to blank, play error sound
-        // displayMsg("error-p","Incorrect Sequence");
-        // //reset user sequence:
-        // USER_SEQ = "";
-        // USER_TURN = false;
-        // playSound(4)
-        // //play current sequence with 3 second pause at the start:
-        // playSeq(3000);
     }
     //If it's the last number/button in the sequence:
     if(USER_SEQ.length === SEQ_STRING.length) {
@@ -218,7 +201,6 @@ function verifySeq() {
             SEQ_LENGTH ++;
             //Reset the user sequence to blank:
             USER_SEQ = "";
-            
             //Turn off user turn:
             USER_TURN = false;
             //Generate a new sequence with the new length:
@@ -248,6 +230,11 @@ function verifySeq() {
 }
 //Function that resets the game:
 function resetGame() {
+    //If not user turn don't allow reset:
+    if(USER_TURN = false) {
+        displayMsg("error-p","Wait your turn.");
+        return;
+    }
     //reset global variables:
     USER_SEQ = "";
     SEQ_STRING = "";
@@ -256,16 +243,10 @@ function resetGame() {
     USER_TURN = false;
     RESET_FLAG = true;
     //Start a new game:
-    
     startGame();
-    
-    
-    //set reset flag back to false:
-    //RESET_FLAG = false;
 }
 //Function that starts the game:
 function startGame() {
-    
     //If the game was just reset:
     if(RESET_FLAG === true) {
         //Set reset flag back to false:
