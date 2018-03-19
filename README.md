@@ -30,4 +30,5 @@ Each new sequence will be made of totally random button choices rather than buil
 
 # Screenshots:
 ![Alt text](https://github.com/tmstani23/Simon-JS/blob/Development/screen1.jpg)
-![Alt text](https://github.com/tmstani23/Simon-JS/blob/Development/screen2.jpg)
+
+![Alt text](https://github.com/tmstani23/Simon-JS/blob/Development/screen2.png)
