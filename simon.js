@@ -1,16 +1,5 @@
 //Simon Game
-
-//Includes:
-
-
-//Plays a sound for each part of the sequence and when user click corresponding button 
-
-//User can see how many steps are in current sequence
-//User can click a reset button to start the game over with 1 sequence
-//Strict Mode: If the user makes an incorrect click they are notified and the game resets to 1 sequence
-//Win Game: User is notified after successfully completing 20 step sequence and then game resets.
-
-//escalating series of random button presses
+//Initialize Global Variables
 const SEQ_ARR = [1,2,3,4];
 let USER_SEQ = "";
 let SEQ_STRING = "";
@@ -19,242 +8,233 @@ let ITER = 0;
 let USER_TURN = false;
 let RESET_FLAG = true;
 let HARD_FLAG = false;
-let START_FLAG = true;
-let DISP_COLOR = [];
-
+let RANDOM_MODE = false;
+//Initialize Sounds
 const SOUND_1 = new Audio('snds/simonSound1.mp3');
 const SOUND_2 = new Audio('snds/simonSound2.mp3');
 const SOUND_3 = new Audio('snds/simonSound3.mp3');
 const SOUND_4 = new Audio('snds/simonSound4.mp3');
 const ERROR_SND = new Audio('snds/doh.wav');
 let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1, ERROR_SND];
+//Initialize Colors
 let dRed = "B2524C";
 let bRed = "FF1100";
 let mGreen = "98D9B2";
 let lGreen = "96FFC1";
 let bGreen = "00FF69";
+//Save Checkbox Inputs to variables:
+let hardCheck = document.querySelector("input[name=hard-check]");
+let randomCheck = document.querySelector("input[name=random-check]");
 
-var checkbox = document.querySelector("input[name=checkbox]");
-
-checkbox.addEventListener( 'change', function() {
+//Add listener to the hardcore mode checkbox on change in status:
+hardCheck.addEventListener( 'change', function() {
+    //If it's checked set flag to true else set flag to false:
     if(this.checked) {
-        // Checkbox is checked..
-        console.log("is checked");
         HARD_FLAG = true;
     } else {
-        // Checkbox is not checked..
-        console.log("isn't checked");
         HARD_FLAG = false;
     }
 });
-
+//Add listener to the random mode checkbox on change in status:
+randomCheck.addEventListener( 'change', function() {
+    if(this.checked) {
+        RANDOM_MODE = true;
+    } else {
+        RANDOM_MODE = false;
+    }
+});
+//Function that adds a secondary pause:
 function hardPause(duration, change){
-    
     setTimeout(function() {
-        //console.log("hard pause");
-        //console.log("changing background to purple");
+        //If change is argument is true:
         if(change === true){
+            //Change background color of last button in the sequence:
             changeBGround(true);
         }
-        
     }, duration);
 }
+//Function that plays the sequence with pauses and button bgcolor changes included:
 function playSeq(duration) {
-    
     setTimeout(function () {    
-        
-        
-        //play sound for specific sequence value:
-        //console.log(SEQ_STRING[ITER]);
+        //play sound for current sequence value:
         playSound(SEQ_STRING[ITER] - 1);
-        //change background color:
+        //change background color of corresponding button:
         changeBGround(false, SEQ_STRING[ITER]); 
         //Increase counter:
         ITER++;
-                            
-        //console.log(SEQ_STRING.length);
+        
+        //If current iteration is less than the sequence length:
         if (ITER < SEQ_STRING.length) {            
             //Reset the error message to blank:
             displayMsg("error-p", "");
             //Play the sequence again:
             playSeq(1000);             
         }
+        //If the current iteration has reached the end of the sequence:
         if(ITER === SEQ_STRING.length) {
-            //console.log('iter at string length');
+            //Pause for one second and change the last button's bg color:
             hardPause(1000, true);
+            //Reset iteration to zero and set user turn flag on:
             ITER = 0;
             USER_TURN = true;
         }
-                              
+        
     }, duration);       
 }
-//Change background color:
+//Change background color function:
 function changeBGround(clear, where) {
-    //set button id variable to current sequence
+    //set button id variable to current sequence value:
     let dispIdCurr = 'button' + where
-    //console.log(dispIdCurr + "background");
-    //console.log(dispIdPrev);
-    //Cycle through all buttons other than current and change background to purple
-        //Unless it is
+    //Cycle through all buttons:
     for(i=1;i<=4; i++) {
         let changeButton = 'button' + i;
-        //console.log(changeButton, dispIdCurr, where);
+        //if current iteration button = button id passed into changeBground function:
         if(changeButton == dispIdCurr) {
+            //Change the background color to bright green:
             document.getElementById(dispIdCurr).style.backgroundColor = bGreen;
         }
+        //Else change it to dark red:
         else {
             document.getElementById(changeButton).style.backgroundColor = dRed;
         }
     }
-   
-    //if there is only one item in sequence change bg back to passive color:
+    //If clear argument is set, change last button in the sequence bg color to dark red:
     if(clear === true) {
         let dispId = 'button' + SEQ_STRING[SEQ_STRING.length - 1];
         document.getElementById(dispId).style.backgroundColor = dRed;
         clear = false;
-        
     }
 }
-//Generate 1 random sequence of n length:
+//Function that generates a sequence of n length:
 function genSequence(length) {
-    //generate random number between 0 and 3:
-    
-    //If the sequence is longer than 20 end game:
-    if(SEQ_LENGTH > 20) {
-        displayMsg("error-p", "sequence longer than 20");
-        return;
-    }
-    //console.log(randomInt);
-    
-    for(i=0; i<length; i++) {
-        //add 3/4 delay between each addition to the sequence:
-        //set flag and run timeout:
+    //If random mode is off:
+    if(!RANDOM_MODE) {
+        //Add a random number from the sequence value array to the end of the sequence string:
         let randomInt = Math.floor(Math.random() * Math.floor(4));
         SEQ_STRING += SEQ_ARR[randomInt];
-        //console.log("afterpause");
+    }
+    //If random mode is on:
+    if(RANDOM_MODE) {
+        //Reset the sequence string to blank:
+        SEQ_STRING = ""; 
+        //Create a random string of numbers as long as the current seq string length:
+        for(i=0; i<length; i++) {
+            let randomInt = Math.floor(Math.random() * Math.floor(4));
+            SEQ_STRING += SEQ_ARR[randomInt];
+        }
     }
     console.log(SEQ_STRING);
-    //Display sequence count to the user:
+    //Display a current sequence count to the screen:
     let dispCount = SEQ_STRING.length;
     displayMsg("seq-display", `Sequence Length: ` + dispCount);
+    //end user turn and play the generated sequence:
     USER_TURN = false;
-    playSeq(1500);
-    
-    //reset iterator to 0
-    //ITER = 0;
-    return SEQ_STRING;
+    playSeq(2000);
+    return;
 }
+//Function that plays button and error sounds:
 function playSound(index) {
+    //if using the chrome browser:
     if(window.chrome) {
-        SOUND_ARR[index].load();
+        //If the input argument is the error soun reduce volume to 1/4:
         if(SOUND_ARR[index] === ERROR_SND) {
             SOUND_ARR[index].volume = 0.25;
-            //console.log("reduce volume");
         }
+        //Load sound pause any already playing sounds and play the current:
+        SOUND_ARR[index].load();
         SOUND_ARR[index].pause();
         SOUND_ARR[index].play(); 
     }
     else {
+        SOUND_ARR[index].pause();
         SOUND_ARR[index].play(); 
     }
-    //SOUND_1.pause();
 }
-//create +1 length escalating sequences up to 20:
-//create user move sequence with buttons
+//Function that controls what happens when the user selects a button:
 function userMove(num) {
-    
+    //If it's not the users turn display a message to the screen and end the function:
     if(!USER_TURN) {
-        displayMsg("error-p","Wait your turn");
+        displayMsg("error-p","Wait your turn.");
         return;
     }
     let sndIndex = num-1;
-    //currentIndex += 1;
+    //Add on user clicked button number to the current user sequence:
     USER_SEQ += num;
+    //Play corresponding sound;
     playSound(sndIndex);
+    //Change corresponding button's bg color:
     changeBGround(false, num);
-    hardPause(1000, false);
+    //Add a 1 second pause then change button color back to red:
+    hardPause(1000, true);
     let currentIndex = USER_SEQ.length - 1;
-    
-    //Synchronize user moves with current sequence index positions:
-    //console.log(USER_SEQ[currentIndex]);
-    //check num against last number of gen sequence string:
-        //get index position of number in user sequence
-        //console.log(currentIndex);
-        //check same index position of seqstring
-        let genSeqVal = parseInt(SEQ_STRING[currentIndex]);    
-        console.log(genSeqVal);
-            //check if value at that index position = num
-            if(num === genSeqVal) {
-                //console.log("numbers match" + num + genSeqVal);
-            }
-    //If user presses a wrong button they are notified and the same sequence plays again
-        if(num != genSeqVal) {
-            console.log("incorrect number" + num + genSeqVal);
-            console.log("hard flag status:" + HARD_FLAG);
-            if(HARD_FLAG === true) {
-                displayMsg("error-p", "Incorrect Sequence");
-                playSound(4);
-                // async function demo(){
-                //     await sleep(4000);
-                // }
-                // demo();
-                //hardPause(5000, true)
-                resetGame();
-                return;
-            }
-            //notify user:
-            displayMsg("error-p","Incorrect Sequence");
-            //reset user sequence:
-            USER_SEQ = "";
-            USER_TURN = false;
-            //play error sound:
-            //hardPause(5000, false);
-            playSound(4)
-            //play current sequence with 3 second pause at the start:
-            playSeq(3000);
-
-        }
-        if(USER_SEQ.length === SEQ_STRING.length) {
-            verifySeq();
-        }
+    //convert current seq string number to an integer:
+    let genSeqVal = parseInt(SEQ_STRING[currentIndex]);    
+    console.log(genSeqVal);
+    //If user presses a wrong button:
+    if(num != genSeqVal) {
+        verifySeq();
+    }
+    //If it's the last number/button in the sequence:
+    if(USER_SEQ.length === SEQ_STRING.length) {
+        //Run verify sequence function:
+        verifySeq();
+    }
 }
-
-//After user inputs correct sequence
-    //Same sequence is repeated back with an additional step
-//create verify sequence function:
+//This function verifies whether the user wins or loses the game
+    //and determines the next steps
 function verifySeq() {
-    
-        
+        //If the user sequence matches the full generated sequence:
         if(USER_SEQ === SEQ_STRING) {
+            //if the user sequence length is 20:
             if(USER_SEQ.length === 20) {
-                displayMsg("error-p", "You Win!");
+                //Display win message to screen
+                displayMsg("error-p", "Congratulations You Win!");
+                //Turn off user turn and reset flag, end function:
+                USER_TURN = false;
+                //Turn off reset flag and end function:
+                RESET_FLAG = false;
                 return;
             }
+            
+            //Otherwise:
+            //Increase the sequence length by 1:
             SEQ_LENGTH ++;
-            console.log("string verified");
+            //Reset the user sequence to blank:
             USER_SEQ = "";
-            SEQ_STRING = "";
+            //Turn off user turn:
             USER_TURN = false;
+            //Generate a new sequence with the new length:
             genSequence(SEQ_LENGTH);
         }
+        //If any other condition:
         else {
-            console.log("incorrect string");
+            //If hardcore mode is checked
             if(HARD_FLAG === true) {
+                //Display message to screen, reset game, and end function:
                 displayMsg("error-p", "Incorrect Sequence");
+                playSound(4);
                 resetGame();
                 return;
             }
-            //reset user sequence:
+            //Otherwise:
+            //Reset user sequence and end turn:
             USER_SEQ = "";
             USER_TURN = false;
+            //Display error message to screen:
+            displayMsg("error-p","Incorrect Sequence");
             //play error sound
+            playSound(4);
             //play current sequence:
-            playSeq(1500);
+            playSeq(2000);
         }
-        
 }
-
+//Function that resets the game:
 function resetGame() {
+    //If not user turn don't allow reset:
+    if(USER_TURN = false) {
+        displayMsg("error-p","Wait your turn.");
+        return;
+    }
     //reset global variables:
     USER_SEQ = "";
     SEQ_STRING = "";
@@ -262,32 +242,28 @@ function resetGame() {
     ITER = 0;
     USER_TURN = false;
     RESET_FLAG = true;
-    //Reset game display messages:
-    //displayMsg("error-p", "");
-    //displayMsg("seq-display", SEQ_LENGTH);
-
-    //Play warning sound:
-    
-    //Do a 1 second hard pause:
-
-    //Start new sequence:
+    //Start a new game:
     startGame();
-    //set reset flag back to false:
-    RESET_FLAG = false;
 }
-
+//Function that starts the game:
 function startGame() {
+    //If the game was just reset:
     if(RESET_FLAG === true) {
-        //console.log(SEQ_LENGTH);
+        //Set reset flag back to false:
+        RESET_FLAG = false;
+        //Generate a new sequence and end the function:
         genSequence(SEQ_LENGTH);
+        return;
     }
     else {
-        console.log("game in progress");
+        //Display a message that the game is in progress and end the function:
+        displayMsg("error-p","Game in Progress. Reset to start over.");
         return;
     }
 }
-
+//Function that displays a message to the screen:
 function displayMsg(where, msg) {
+    //Get display element based on function input argument and display input message:
     document.getElementById(where).innerHTML = msg;
 }
 
