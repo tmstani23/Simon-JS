@@ -134,12 +134,12 @@ function genSequence(length) {
 }
 //Function that plays button and error sounds:
 function playSound(index) {
-    //if using the chrome browser:
-    if(window.chrome) {
-        //If the input argument is the error soun reduce volume to 1/4:
+    //If the input argument is the error soun reduce volume to 1/4:
         if(SOUND_ARR[index] === ERROR_SND) {
             SOUND_ARR[index].volume = 0.25;
         }
+    //if using the chrome browser:
+    if(window.chrome) {
         //Load sound pause any already playing sounds and play the current:
         SOUND_ARR[index].load();
         SOUND_ARR[index].pause();
