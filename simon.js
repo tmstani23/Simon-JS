@@ -231,7 +231,7 @@ function verifySeq() {
 //Function that resets the game:
 function resetGame() {
     //If not user turn don't allow reset:
-    if(USER_TURN = false) {
+    if(!USER_TURN) {
         displayMsg("error-p","Wait your turn.");
         return;
     }
