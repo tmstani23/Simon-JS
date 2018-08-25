@@ -10,18 +10,18 @@ let RESET_FLAG = true;
 let HARD_FLAG = false;
 let RANDOM_MODE = false;
 //Initialize Sounds
-const SOUND_1 = new Audio('snds/simonSound1.mp3');
-const SOUND_2 = new Audio('snds/simonSound2.mp3');
-const SOUND_3 = new Audio('snds/simonSound3.mp3');
-const SOUND_4 = new Audio('snds/simonSound4.mp3');
-const ERROR_SND = new Audio('snds/doh.wav');
+const SOUND_1 = new Audio('https://raw.githubusercontent.com/tmstani23/Simon-JS/master/snds/simonSound1.mp3');
+const SOUND_2 = new Audio('https://raw.githubusercontent.com/tmstani23/Simon-JS/master/snds/simonSound2.mp3');
+const SOUND_3 = new Audio('https://raw.githubusercontent.com/tmstani23/Simon-JS/master/snds/simonSound3.mp3');
+const SOUND_4 = new Audio('https://raw.githubusercontent.com/tmstani23/Simon-JS/master/snds/simonSound4.mp3');
+const ERROR_SND = new Audio('https://raw.githubusercontent.com/tmstani23/Simon-JS/master/snds/doh.wav');
 let SOUND_ARR = [SOUND_4, SOUND_3, SOUND_2, SOUND_1, ERROR_SND];
 //Initialize Colors
-let dRed = "B2524C";
-let bRed = "FF1100";
-let mGreen = "98D9B2";
-let lGreen = "96FFC1";
-let bGreen = "00FF69";
+var dRed = "#B2524C";
+var bRed = "#FF1100";
+var mGreen = "#98D9B2";
+var lGreen = "#96FFC1";
+var bGreen = "#00FF69";
 //Save Checkbox Inputs to variables:
 let hardCheck = document.querySelector("input[name=hard-check]");
 let randomCheck = document.querySelector("input[name=random-check]");
@@ -134,12 +134,14 @@ function genSequence(length) {
 }
 //Function that plays button and error sounds:
 function playSound(index) {
-    //if using the chrome browser:
-    if(window.chrome) {
-        //If the input argument is the error soun reduce volume to 1/4:
+    
+    //If the input argument is the error soun reduce volume to 1/4:
         if(SOUND_ARR[index] === ERROR_SND) {
             SOUND_ARR[index].volume = 0.25;
         }
+    //if using the chrome browser:
+    if(window.chrome) {
+        
         //Load sound pause any already playing sounds and play the current:
         SOUND_ARR[index].load();
         SOUND_ARR[index].pause();
